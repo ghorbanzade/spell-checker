@@ -54,7 +54,7 @@ char getch(void)
  *
  *
  */
-void get_line_input(char *out, size_t size)
+void input_line(char *out, size_t size)
 {
     int i = 0;
     char ch;
@@ -72,6 +72,21 @@ void get_line_input(char *out, size_t size)
     tmp[i] = '\0';
     putchar('\n');
     strncpy(out, tmp, size);
+}
+
+/**
+ *
+ *
+ *
+ */
+int get_word(FILE *file, char *word)
+{
+    int ret = 0;
+    if (fscanf(file, "%s", word) == EOF)
+        goto ERROR;
+    ret = 1;
+ERROR:
+    return ret;
 }
 
 /**
@@ -131,6 +146,11 @@ ERROR:
     return ret;
 }
 
+/**
+ *
+ *
+ *
+ */
 void print_hr(void)
 {
     for (int i = 0; i < 80; i++)
@@ -138,8 +158,30 @@ void print_hr(void)
     putchar('\n');
 }
 
+/**
+ *
+ *
+ *
+ */
 void print_preview(FILE *file)
 {
     long int cur = ftell(file);
     fseek(file, cur, SEEK_SET);
+}
+
+/**
+ *
+ *
+ *
+ */
+void print_progress(FILE *file)
+{
+    long int cur = ftell(file);
+    fseek(file, 0, SEEK_END);
+    long int end = ftell(file);
+    fseek(file, cur, SEEK_SET);
+    long int progress = cur * 80 / end;
+    for (int i = 0; i < progress; i++)
+        putchar('-');
+    putchar('\n');
 }

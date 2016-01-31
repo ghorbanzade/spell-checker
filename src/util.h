@@ -29,11 +29,13 @@
 
 void clear_screen(void);
 char getch(void);
-void get_line_input(char *out, size_t size);
+void input_line(char *out, size_t size);
+int get_word(FILE *file, char *word);
 int print_content(char const *const filename);
 void print_error(char *format, ...);
 void print_header(char const *const doc);
 void print_hr(void);
 void print_preview(FILE *file);
+void print_progress(FILE *file);
 
 #endif //UTIL_H

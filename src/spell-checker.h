@@ -21,24 +21,28 @@
 #define SPELL_CHECKER_H
 
 #include <ctype.h>
+#include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
 
 #include "util.h"
 
 #define FILE_BANNER "cfg/banner"
-#define FILE_DICTIONARY "lib/dictionary"
-#define FILE_DOCUMENT "dat/document"
-#define FILE_OUTPUT "bin/document"
-#define WINDOW_SIZE 40
+#define MAX_WORD_LENGTH 40
 
-void add_word(FILE *file, char *format, ...);
-int get_word(FILE *doc, char *word);
-void intro(void);
+enum {
+	FILE_DOC,
+	FILE_DIC,
+	FILE_OUT,
+	FILE_COUNT
+};
+
+void close_files(FILE *files[]);
+int handle_word(char buf[], FILE *files[], char *names[]);
+int open_files(char *names[], FILE *files[]);
 char show_menu(void);
-void spell_check(char *doc, char *dict, char *out);
+int spell_check(char *names[]);
 void trim_word(char *word, char *out);
 int word_exists(FILE *dict, char *word);
-void get_line_input(char *out, size_t size);
 
 #endif //SPELL_CHECKER_H

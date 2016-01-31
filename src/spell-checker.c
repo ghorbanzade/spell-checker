@@ -26,8 +26,18 @@
  */
 int main(int argc, char *argv[])
 {
-    intro();
-	spell_check(FILE_DOCUMENT, FILE_DICTIONARY, FILE_OUTPUT);
+    int ret = EXIT_FAILURE;
+    char *names[FILE_COUNT];
+    names[FILE_DOC] = "dat/document";
+    names[FILE_DIC] = "lib/dict";
+    names[FILE_OUT] = "bin/document";
+    if (spell_check(names))
+        goto ERROR;
+    print_content(FILE_BANNER);
+    ret = EXIT_SUCCESS;
+ERROR:
+
+    return ret;
 }
 
 /**
@@ -35,84 +45,33 @@ int main(int argc, char *argv[])
  *
  *
  */
-void intro(void)
+int spell_check(char *names[])
 {
-    clear_screen();
-	print_content(FILE_BANNER);
-    for (int i = 0; i < 3; i++) {
-        fprintf(stdout, ".");
-        fflush(stdout);
-        sleep(1);
-    }
-}
-
-/**
- *
- *
- *
- */
-void spell_check(char *doc, char *dic, char *out) {
-    char wrd[100];
-    char tmp[100];
-    char word[100];
-
-    FILE *fdoc = NULL;
-    FILE *fdic = NULL;
-    FILE *fout = NULL;
-
-    fdic = fopen(dic, "r+");
-    if (fdic == NULL) {
-        print_error("unable to open file %s.", dic);
+    int i = 0;
+    int ret = -1;
+    char ch;
+    char buf[MAX_WORD_LENGTH];
+    FILE *files[FILE_COUNT];
+    if (open_files(names, files))
         goto ERROR;
-    }
-    fdoc = fopen(doc, "r");
-    if (fdoc == NULL) {
-        print_error("unable to open file %s.", doc);
-        goto ERROR;
-    }
-    fout = fopen(out, "w");
-    if (fout == NULL) {
-        print_error("unable to open file %s.", out);
-        goto ERROR;
-    }
-
-    while (get_word(fdoc, word)) {
-        trim_word(word, wrd);
-        if (word_exists(fdic, wrd)) {
-            add_word(fout, "%s ", word);
-        }
-        else {
-            clear_screen();
-            print_header(doc);
-            print_hr();
-            print_preview(fdoc);
-            print_hr();
-            printf("word \"%s\" not found in dict\n", wrd);
-            switch (show_menu()) {
-            case 'a':
-                add_word(fdic, "%s\n", wrd);
-                add_word(fout, "%s ", wrd);
-                break;
-            case 's':
-                printf("substitute %s: ", wrd);
-                get_line_input(tmp, sizeof(tmp));
-                printf("entered: %s\n", tmp);
-                add_word(fout, "%s ", tmp);
-                break;
-            case 'c':
-                add_word(fout, "%s ", word);
-                break;
+    while ((ch = getc(files[FILE_DOC])) != EOF) {
+        if (isspace(ch)) {
+            buf[i] = '\0';
+            if (i != 0) {
+                if (handle_word(buf, files, names))
+                    goto ERROR;
+                i = 0;
             }
+            fprintf(files[FILE_OUT], "%c", ch);
+        } else {
+            buf[i++] = ch;
         }
     }
+    ret = 0;
 
 ERROR:
-    if (fdic != NULL)
-        fclose(fdic);
-    if (fdoc != NULL)
-        fclose(fdoc);
-    if (fout != NULL)
-        fclose(fout);
+    close_files(files);
+    return ret;
 }
 
 /**
@@ -120,14 +79,72 @@ ERROR:
  *
  *
  */
-int get_word(FILE *doc, char *word)
+int handle_word(char buf[], FILE *files[], char *names[])
 {
-    int ret = 0;
-    if (fscanf(doc, "%s", word) == EOF)
-        goto ERROR;
-    ret = 1;
+    int ret = -1;
+    char tmp[strlen(buf)];
+    char inp[MAX_WORD_LENGTH];
+    trim_word(buf, tmp);
+    if (word_exists(files[FILE_DIC], tmp)) {
+        fprintf(files[FILE_OUT], "%s", buf);
+    } else {
+        clear_screen();
+        print_header(names[FILE_DOC]);
+        print_hr();
+        print_preview(files[FILE_DOC]);
+        print_progress(files[FILE_DOC]);
+        printf("word \"%s\" not found in dict\n", tmp);
+        switch (show_menu()) {
+        case 'a':
+            fprintf(files[FILE_DIC], "%s\n", tmp);
+            fprintf(files[FILE_OUT], "%s", tmp);
+            break;
+        case 's':
+            printf("substitute %s: ", buf);
+            input_line(inp, sizeof(inp));
+            fprintf(files[FILE_OUT], "%s", inp);
+            break;
+        case 'c':
+            fprintf(files[FILE_OUT], "%s", buf);
+            break;
+        }
+    }
+    ret = 0;
+    return ret;
+}
+
+/**
+ *
+ *
+ *
+ */
+int open_files(char *names[], FILE *files[])
+{
+    int ret = -1;
+    files[FILE_DOC] = fopen(names[FILE_DOC], "r");
+    files[FILE_DIC] = fopen(names[FILE_DIC], "r+");
+    files[FILE_OUT] = fopen(names[FILE_OUT], "w");
+    for (int i = 0; i < FILE_COUNT; i++) {
+        if (files[i] == NULL) {
+            print_error("unable to open file %s.", names[i]);
+            goto ERROR;
+        }
+    }
+    ret = 0;
 ERROR:
     return ret;
+}
+
+/**
+ *
+ *
+ *
+ */
+void close_files(FILE *files[])
+{
+    for (int i = 0; i < FILE_COUNT; i++)
+        if (files[i] != NULL)
+            fclose(files[i]);
 }
 
 /**
@@ -182,18 +199,4 @@ char show_menu(void)
             break;
     }
     return input;
-}
-
-/**
- *
- *
- *
- */
-void add_word(FILE *file, char *format, ...)
-{
-    va_list args;
-    va_start(args, format);
-    fseek(file, 0, SEEK_END);
-    vfprintf(file, format, args);
-    va_end(args);
 }
