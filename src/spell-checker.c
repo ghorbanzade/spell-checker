@@ -84,6 +84,9 @@ void spell_check(char *doc, char *dic, char *out) {
         else {
             clear_screen();
             print_header(doc);
+            print_hr();
+            print_preview(fdoc);
+            print_hr();
             printf("word \"%s\" not found in dict\n", wrd);
             switch (show_menu()) {
             case 'a':
@@ -95,6 +98,9 @@ void spell_check(char *doc, char *dic, char *out) {
                 get_line_input(tmp, sizeof(tmp));
                 printf("entered: %s\n", tmp);
                 add_word(fout, "%s ", tmp);
+                break;
+            case 'c':
+                add_word(fout, "%s ", word);
                 break;
             }
         }
@@ -169,9 +175,10 @@ char show_menu(void)
     char input;
     printf("(a) add to dictionary\n");
     printf("(s) substitute word\n");
+    printf("(c) ignore word\n");
     while (1) {
         input = getch();
-        if (input == 'a' || input == 's')
+        if (input == 'a' || input == 's' || input == 'c')
             break;
     }
     return input;

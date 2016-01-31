@@ -97,9 +97,6 @@ void print_error(char *format, ...)
 void print_header(char const *const doc)
 {
     printf("%-40s%40s\n", PROGRAM_NAME, doc);
-    for (int i = 0; i < 80; i++)
-        putchar('-');
-    putchar('\n');
 }
 
 /**
@@ -132,4 +129,17 @@ ERROR:
     if (file != NULL)
         fclose(file);
     return ret;
+}
+
+void print_hr(void)
+{
+    for (int i = 0; i < 80; i++)
+        putchar('-');
+    putchar('\n');
+}
+
+void print_preview(FILE *file)
+{
+    long int cur = ftell(file);
+    fseek(file, cur, SEEK_SET);
 }

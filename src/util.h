@@ -30,8 +30,10 @@
 void clear_screen(void);
 char getch(void);
 void get_line_input(char *out, size_t size);
+int print_content(char const *const filename);
 void print_error(char *format, ...);
 void print_header(char const *const doc);
-int print_content(char const *const filename);
+void print_hr(void);
+void print_preview(FILE *file);
 
 #endif //UTIL_H

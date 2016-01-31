@@ -30,6 +30,7 @@
 #define FILE_DICTIONARY "lib/dictionary"
 #define FILE_DOCUMENT "dat/document"
 #define FILE_OUTPUT "bin/document"
+#define WINDOW_SIZE 40
 
 void add_word(FILE *file, char *format, ...);
 int get_word(FILE *doc, char *word);
