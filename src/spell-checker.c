@@ -35,8 +35,8 @@ int main(int argc, char *argv[])
         goto ERROR;
     print_content(FILE_BANNER);
     ret = EXIT_SUCCESS;
-ERROR:
 
+ERROR:
     return ret;
 }
 
@@ -85,15 +85,18 @@ int handle_word(char buf[], FILE *files[], char *names[])
     char tmp[strlen(buf)];
     char inp[MAX_WORD_LENGTH];
     trim_word(buf, tmp);
+    if (is_number(tmp))
+        goto NEXT;
     if (word_exists(files[FILE_DIC], tmp)) {
         fprintf(files[FILE_OUT], "%s", buf);
     } else {
-        clear_screen();
+        printf(CLSCRN);
         print_header(names[FILE_DOC]);
         print_hr();
-        print_preview(files[FILE_DOC]);
-        print_progress(files[FILE_DOC]);
+        print_preview(files[FILE_DOC], buf);
+        print_hr();
         printf("word \"%s\" not found in dict\n", tmp);
+        print_progress(files[FILE_DOC]);
         switch (show_menu()) {
         case 'a':
             fprintf(files[FILE_DIC], "%s\n", tmp);
@@ -107,9 +110,15 @@ int handle_word(char buf[], FILE *files[], char *names[])
         case 'c':
             fprintf(files[FILE_OUT], "%s", buf);
             break;
+        case 'q':
+            goto ERROR;
         }
     }
+
+NEXT:
     ret = 0;
+
+ERROR:
     return ret;
 }
 
@@ -167,12 +176,26 @@ void trim_word(char *word, char *out)
  *
  *
  */
+int is_number(char tmp[])
+{
+    int ret = -1;
+    for (int i = 0; i < strlen(tmp); i++)
+        if (!isdigit(tmp[i]))
+            ret = 0;
+    return ret;
+}
+
+/**
+ *
+ *
+ *
+ */
 int word_exists(FILE *dict, char *word)
 {
     int ret = 0;
-    char line[80];
+    char line[LINE_WIDTH];
     fseek(dict, 0, SEEK_SET);
-    while (fgets(line, 80, dict) != NULL) {
+    while (fgets(line, LINE_WIDTH, dict) != NULL) {
         line[strlen(line) - 1] = '\0';
         if (strcmp(line, word) == 0) {
             ret = 1;
@@ -189,14 +212,20 @@ int word_exists(FILE *dict, char *word)
  */
 char show_menu(void)
 {
+    int i;
     char input;
+    char *tmp = "ascq";
     printf("(a) add to dictionary\n");
     printf("(s) substitute word\n");
     printf("(c) ignore word\n");
+    printf("(q) abort program\n");
     while (1) {
         input = getch();
-        if (input == 'a' || input == 's' || input == 'c')
-            break;
+        for (i = 0; i < strlen(tmp); i++)
+            if (input == tmp[i])
+                goto FOUND;
     }
+
+FOUND:
     return input;
 }

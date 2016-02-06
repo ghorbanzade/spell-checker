@@ -43,6 +43,7 @@ int open_files(char *names[], FILE *files[]);
 char show_menu(void);
 int spell_check(char *names[]);
 void trim_word(char *word, char *out);
+int is_number(char tmp[]);
 int word_exists(FILE *dict, char *word);
 
 #endif //SPELL_CHECKER_H

@@ -26,16 +26,6 @@ static struct termios old, new;
  *
  *
  */
-void clear_screen()
-{
-    printf("\e[1;1H\e[2J");
-}
-
-/**
- *
- *
- *
- */
 char getch(void)
 {
     char ch;
@@ -85,6 +75,7 @@ int get_word(FILE *file, char *word)
     if (fscanf(file, "%s", word) == EOF)
         goto ERROR;
     ret = 1;
+
 ERROR:
     return ret;
 }
@@ -122,15 +113,14 @@ void print_header(char const *const doc)
 int print_content(char const *const filename)
 {
     int ret = -1;
-    char line[80];
+    char line[LINE_WIDTH];
     FILE *file = NULL;
-
     file = fopen(filename, "r");
     if (file == NULL) {
         print_error("unable to open file %s.", filename);
         goto ERROR;
     }
-    while (fgets(line, 80, file) != NULL) {
+    while (fgets(line, LINE_WIDTH, file) != NULL) {
         int i = 0;
         while (line[i] == ' ')
             i++;
@@ -153,7 +143,8 @@ ERROR:
  */
 void print_hr(void)
 {
-    for (int i = 0; i < 80; i++)
+    int i;
+    for (i = 0; i < LINE_WIDTH; i++)
         putchar('-');
     putchar('\n');
 }
@@ -163,10 +154,43 @@ void print_hr(void)
  *
  *
  */
-void print_preview(FILE *file)
+void print_preview(FILE *file, char const word[])
 {
-    long int cur = ftell(file);
+    long int pre, len;
+    long int cur, end;
+    size_t size = 300;
+
+    cur = ftell(file);
+    pre = (cur < size) ? 0 : cur - size - strlen(word);
+    len = (cur < size) ? cur - strlen(word) : size;
+    print_snippet(file, pre, len);
+
+    printf("%s%s%s ", KRED, word, KNRM);
+
+    fseek(file, 0, SEEK_END);
+    end = ftell(file);
     fseek(file, cur, SEEK_SET);
+    len = (end < cur + size) ? end - cur : size;
+    print_snippet(file, cur, len);
+
+    printf("\n");
+    fseek(file, cur, SEEK_SET);
+}
+
+/**
+ *
+ *
+ *
+ */
+void print_snippet(FILE *file, long int const str, size_t const len)
+{
+    char tmp[len];
+    long int cur = ftell(file);
+    fseek(file, str, SEEK_SET);
+    fread(tmp, sizeof(char), len, file);
+    fseek(file, cur, SEEK_SET);
+    tmp[len-1] = '\0';
+    printf("%s", tmp);
 }
 
 /**
@@ -176,12 +200,14 @@ void print_preview(FILE *file)
  */
 void print_progress(FILE *file)
 {
-    long int cur = ftell(file);
+    int i;
+    long int cur, end, progress;
+    cur = ftell(file);
     fseek(file, 0, SEEK_END);
-    long int end = ftell(file);
+    end = ftell(file);
     fseek(file, cur, SEEK_SET);
-    long int progress = cur * 80 / end;
-    for (int i = 0; i < progress; i++)
+    progress = cur * LINE_WIDTH / end;
+    for (i = 0; i < progress; i++)
         putchar('-');
     putchar('\n');
 }
