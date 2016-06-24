@@ -11,11 +11,23 @@ int main(int argc, char *argv[])
     int ret = EXIT_FAILURE;
     char *names[FILE_COUNT];
 
-    while ((ch = getopt(argc, argv, "hv")) != -1) {
+    while ((ch = getopt(argc, argv, "d:hi:o:pv")) != -1) {
         switch (ch) {
+        case 'd':
+            log_info("dictionary %s", optarg);
+            break;
         case 'h':
             print_content("bin/cfg/help");
             return EXIT_SUCCESS;
+        case 'i':
+            log_info("input_file %s", optarg);
+            break;
+        case 'o':
+            log_info("output_file %s", optarg);
+            break;
+        case 'p':
+            log_info("in-place");
+            break;
         case 'v':
             fprintf(stdout, "%s v%1.1f\n", PROJECT_NAME, PROJECT_VERSION);
             return EXIT_SUCCESS;
