@@ -25,9 +25,19 @@ int main(int argc, char *argv[])
             config.file[FILE_DOC] = optarg;
             break;
         case 'o':
+            if (config.in_place) {
+                log_fatal("output file cannot be specified "
+                          "if in-place edit is asked for");
+                return EXIT_FAILURE;
+            }
             config.file[FILE_OUT] = optarg;
             break;
         case 'p':
+            if (config.file[FILE_OUT]) {
+                log_fatal("document cannot be edited in place "
+                          "if output file is specified");
+                return EXIT_FAILURE;
+            }
             config.in_place = 1;
             break;
         case 'v':
@@ -39,13 +49,56 @@ int main(int argc, char *argv[])
         }
     }
 
+    if (check_config(&config, argc, argv)) {
+        print_content(SC_FILE_HELP);
+        goto ERROR;
+    }
+
     if (spell_check(&config))
         goto ERROR;
     print_content(SC_FILE_BANNER);
     ret = EXIT_SUCCESS;
 
  ERROR:
+    if (config.file[FILE_OUT])
+        free(config.file[FILE_OUT]);
     return ret;
+}
+
+/**
+ *
+ *
+ *
+ */
+int check_config(struct sc_config *config, int argc, char *argv[])
+{
+
+    if (!config->file[FILE_DOC]) {
+        if (optind < argc && 1 < argc) {
+            config->file[FILE_DOC] = argv[optind];
+        } else {
+            log_fatal("document not specified");
+            return -1;
+        }
+    }
+
+    if (!config->file[FILE_OUT]) {
+        if (!config->in_place) {
+            config->file[FILE_OUT] = malloc(
+                    strlen(config->file[FILE_DOC]) + sizeof(".out")
+            );
+            strcpy(config->file[FILE_OUT], config->file[FILE_DOC]);
+            strcat(config->file[FILE_OUT], ".out");
+        } else {
+            config->file[FILE_OUT] = config->file[FILE_DOC];
+        }
+    }
+
+    log_info("input: %s", config->file[FILE_DOC]);
+    log_info("output: %s", config->file[FILE_OUT]);
+    log_info("dictionary: %s", config->file[FILE_DIC]);
+
+    return 0;
 }
 
 /**
@@ -138,11 +191,12 @@ int handle_word(char buf[], FILE *files[], struct sc_config const *config)
  */
 int open_files(struct sc_config const *config, FILE *files[])
 {
+    int i;
     int ret = -1;
     files[FILE_DOC] = fopen(config->file[FILE_DOC], "r");
     files[FILE_OUT] = fopen(config->file[FILE_OUT], "w");
     files[FILE_DIC] = fopen(config->file[FILE_DIC], "r+");
-    for (int i = 0; i < FILE_COUNT; i++) {
+    for (i = 0; i < FILE_COUNT; i++) {
         if (files[i] == NULL) {
             log_error("unable to open file %s.", config->file[i]);
             goto ERROR;
@@ -161,7 +215,8 @@ int open_files(struct sc_config const *config, FILE *files[])
  */
 void close_files(FILE *files[])
 {
-    for (int i = 0; i < FILE_COUNT; i++)
+    int i;
+    for (i = 0; i < FILE_COUNT; i++)
         if (files[i] != NULL)
             fclose(files[i]);
 }
@@ -188,8 +243,9 @@ void trim_word(char *word, char *out)
  */
 int is_number(char tmp[])
 {
+    int i;
     int ret = -1;
-    for (int i = 0; i < strlen(tmp); i++)
+    for (i = 0; i < strlen(tmp); i++)
         if (!isdigit(tmp[i]))
             ret = 0;
     return ret;
@@ -236,6 +292,6 @@ char show_menu(void)
                 goto FOUND;
     }
 
-FOUND:
+ FOUND:
     return input;
 }
