@@ -1,0 +1,3 @@
+usage: @PROGRAM_NAME@ [-h] [-v]
+  -h    prints this help message
+  -v	prints version of this software

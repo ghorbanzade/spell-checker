@@ -1,22 +1,3 @@
-/*
- * Spell-Checker v0.1
- * Copyright (C) 2016 Pejman Ghorbanzade
- *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License along
- * with this program; if not, write to the Free Software Foundation, Inc.,
- * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
- */
-
 #include "util.h"
 
 static struct termios old, new;
@@ -85,24 +66,9 @@ ERROR:
  *
  *
  */
-void print_error(char *format, ...)
-{
-    va_list args;
-    char new_format[240];
-    va_start(args, format);
-    sprintf(new_format, "error: %s\n", format);
-    vprintf(new_format, args);
-    va_end(args);
-}
-
-/**
- *
- *
- *
- */
 void print_header(char const *const doc)
 {
-    printf("%-40s%40s\n", PROGRAM_NAME, doc);
+    printf("%-40s%40s\n", PROJECT_NAME, doc);
 }
 
 /**
@@ -117,7 +83,7 @@ int print_content(char const *const filename)
     FILE *file = NULL;
     file = fopen(filename, "r");
     if (file == NULL) {
-        print_error("unable to open file %s.", filename);
+        log_error("unable to open file %s.", filename);
         goto ERROR;
     }
     while (fgets(line, LINE_WIDTH, file) != NULL) {
@@ -129,10 +95,10 @@ int print_content(char const *const filename)
     }
     ret = 0;
 
-ERROR:
-
+ ERROR:
     if (file != NULL)
         fclose(file);
+
     return ret;
 }
 

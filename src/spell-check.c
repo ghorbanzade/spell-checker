@@ -1,23 +1,4 @@
-/*
- * Spell-Checker v0.1
- * Copyright (C) 2016 Pejman Ghorbanzade
- *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License along
- * with this program; if not, write to the Free Software Foundation, Inc.,
- * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
- */
-
-#include "spell-checker.h"
+#include "spell-check.h"
 
 /**
  *
@@ -26,8 +7,24 @@
  */
 int main(int argc, char *argv[])
 {
+    char ch;
     int ret = EXIT_FAILURE;
     char *names[FILE_COUNT];
+
+    while ((ch = getopt(argc, argv, "hv")) != -1) {
+        switch (ch) {
+        case 'h':
+            print_content("bin/cfg/help");
+            return EXIT_SUCCESS;
+        case 'v':
+            fprintf(stdout, "%s v%1.1f\n", PROJECT_NAME, PROJECT_VERSION);
+            return EXIT_SUCCESS;
+        default:
+            print_content("bin/cfg/help");
+            return EXIT_FAILURE;
+        }
+    }
+
     names[FILE_DOC] = "dat/document";
     names[FILE_DIC] = "lib/dict";
     names[FILE_OUT] = "bin/document";
@@ -135,7 +132,7 @@ int open_files(char *names[], FILE *files[])
     files[FILE_OUT] = fopen(names[FILE_OUT], "w");
     for (int i = 0; i < FILE_COUNT; i++) {
         if (files[i] == NULL) {
-            print_error("unable to open file %s.", names[i]);
+            log_error("unable to open file %s.", names[i]);
             goto ERROR;
         }
     }
