@@ -1,0 +1,11 @@
+
+usage: @PROGRAM_NAME@ [-hv] [[-i] input_file] [-p | -o output_file]
+                      [-d dictionary_file]
+
+  -d dictionary_file    file to be used as dictionary
+  -h                    prints this message and exits
+  -i input_file         file to check
+  -o output_file        file to write corrected text into
+  -p                    makes document to be modified in-place
+  -v                    prints version and exits
+

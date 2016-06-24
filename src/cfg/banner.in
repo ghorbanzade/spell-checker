@@ -1,5 +1,5 @@
 
-        Spell-Checker v0.1, Copyright (C) 2016 Pejman Ghorbanzade
+        @PROJECT_NAME@ v@PROJECT_VERSION@, Copyright (C) @COPYRIGHT_YEAR@ @COPYRIGHT_AUTHOR@
         This software comes with ABSOLUTELY NO WARRANTY.
         This is free software, and you are welcome to redistribute it
         under certain conditions; type `show license' for details.

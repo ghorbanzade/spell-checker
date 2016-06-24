@@ -1,23 +1,4 @@
-/*
- * Spell-Checker v0.1
- * Copyright (C) 2016 Pejman Ghorbanzade
- *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License along
- * with this program; if not, write to the Free Software Foundation, Inc.,
- * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
- */
-
-#include "spell-checker.h"
+#include "spell-check.h"
 
 /**
  *
@@ -26,17 +7,44 @@
  */
 int main(int argc, char *argv[])
 {
+    char ch;
     int ret = EXIT_FAILURE;
-    char *names[FILE_COUNT];
-    names[FILE_DOC] = "dat/document";
-    names[FILE_DIC] = "lib/dict";
-    names[FILE_OUT] = "bin/document";
-    if (spell_check(names))
+    struct sc_config config;
+
+    config.in_place = 0;
+    config.file[FILE_DIC] = DEFAULT_DICTIONARY;
+    while ((ch = getopt(argc, argv, "d:hi:o:pv")) != -1) {
+        switch (ch) {
+        case 'd':
+            config.file[FILE_DIC] = optarg;
+            break;
+        case 'h':
+            print_content(SC_FILE_HELP);
+            return EXIT_SUCCESS;
+        case 'i':
+            config.file[FILE_DOC] = optarg;
+            break;
+        case 'o':
+            config.file[FILE_OUT] = optarg;
+            break;
+        case 'p':
+            config.in_place = 1;
+            break;
+        case 'v':
+            print_content(SC_FILE_VERSION);
+            return EXIT_SUCCESS;
+        default:
+            print_content(SC_FILE_HELP);
+            return EXIT_FAILURE;
+        }
+    }
+
+    if (spell_check(&config))
         goto ERROR;
-    print_content(FILE_BANNER);
+    print_content(SC_FILE_BANNER);
     ret = EXIT_SUCCESS;
 
-ERROR:
+ ERROR:
     return ret;
 }
 
@@ -45,20 +53,21 @@ ERROR:
  *
  *
  */
-int spell_check(char *names[])
+int spell_check(struct sc_config const *config)
 {
     int i = 0;
     int ret = -1;
     char ch;
     char buf[MAX_WORD_LENGTH];
     FILE *files[FILE_COUNT];
-    if (open_files(names, files))
+
+    if (open_files(config, files))
         goto ERROR;
     while ((ch = getc(files[FILE_DOC])) != EOF) {
         if (isspace(ch)) {
             buf[i] = '\0';
             if (i != 0) {
-                if (handle_word(buf, files, names))
+                if (handle_word(buf, files, config))
                     goto ERROR;
                 i = 0;
             }
@@ -69,7 +78,7 @@ int spell_check(char *names[])
     }
     ret = 0;
 
-ERROR:
+ ERROR:
     close_files(files);
     return ret;
 }
@@ -79,7 +88,7 @@ ERROR:
  *
  *
  */
-int handle_word(char buf[], FILE *files[], char *names[])
+int handle_word(char buf[], FILE *files[], struct sc_config const *config)
 {
     int ret = -1;
     char tmp[strlen(buf)];
@@ -91,7 +100,7 @@ int handle_word(char buf[], FILE *files[], char *names[])
         fprintf(files[FILE_OUT], "%s", buf);
     } else {
         printf(CLSCRN);
-        print_header(names[FILE_DOC]);
+        print_header(config->file[FILE_DOC]);
         print_hr();
         print_preview(files[FILE_DOC], buf);
         print_hr();
@@ -115,10 +124,10 @@ int handle_word(char buf[], FILE *files[], char *names[])
         }
     }
 
-NEXT:
+ NEXT:
     ret = 0;
 
-ERROR:
+ ERROR:
     return ret;
 }
 
@@ -127,20 +136,21 @@ ERROR:
  *
  *
  */
-int open_files(char *names[], FILE *files[])
+int open_files(struct sc_config const *config, FILE *files[])
 {
     int ret = -1;
-    files[FILE_DOC] = fopen(names[FILE_DOC], "r");
-    files[FILE_DIC] = fopen(names[FILE_DIC], "r+");
-    files[FILE_OUT] = fopen(names[FILE_OUT], "w");
+    files[FILE_DOC] = fopen(config->file[FILE_DOC], "r");
+    files[FILE_OUT] = fopen(config->file[FILE_OUT], "w");
+    files[FILE_DIC] = fopen(config->file[FILE_DIC], "r+");
     for (int i = 0; i < FILE_COUNT; i++) {
         if (files[i] == NULL) {
-            print_error("unable to open file %s.", names[i]);
+            log_error("unable to open file %s.", config->file[i]);
             goto ERROR;
         }
     }
     ret = 0;
-ERROR:
+
+ ERROR:
     return ret;
 }
 
