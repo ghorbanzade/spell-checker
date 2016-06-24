@@ -15,13 +15,18 @@ configure_file(
 )
 
 configure_file(
-	"${PROJECT_SOURCE_DIR}/cfg/config.h.in"
-	"${PROJECT_BINARY_DIR}/cfg/config.h"
+	"${PROJECT_SOURCE_DIR}/cfg/help.in"
+	"${PROJECT_BINARY_DIR}/cfg/help"
 )
 
 configure_file(
-	"${PROJECT_SOURCE_DIR}/cfg/help.in"
-	"${PROJECT_BINARY_DIR}/cfg/help"
+	"${PROJECT_SOURCE_DIR}/cfg/version.in"
+	"${PROJECT_BINARY_DIR}/cfg/version"
+)
+
+configure_file(
+	"${PROJECT_SOURCE_DIR}/cfg/config.h.in"
+	"${PROJECT_BINARY_DIR}/cfg/config.h"
 )
 
 include_directories(

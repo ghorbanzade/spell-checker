@@ -9,9 +9,10 @@
 #include "util.h"
 #include "logger.h"
 
-#define FILE_BANNER "cfg/banner"
-#define FILE_HELP "cfg/help"
-#define FILE_VERSION "cfg/version"
+#define DEFAULT_DICTIONARY "dat/dictionary"
+#define SC_FILE_BANNER "bin/cfg/banner"
+#define SC_FILE_HELP "bin/cfg/help"
+#define SC_FILE_VERSION "bin/cfg/version"
 
 #define MAX_WORD_LENGTH 40
 
@@ -22,11 +23,16 @@ enum {
 	FILE_COUNT
 };
 
+struct sc_config {
+    int in_place;
+    char const *file[FILE_COUNT];
+};
+
 void close_files(FILE *files[]);
-int handle_word(char buf[], FILE *files[], char *names[]);
-int open_files(char *names[], FILE *files[]);
+int handle_word(char buf[], FILE *files[], struct sc_config const *config);
+int open_files(struct sc_config const *config, FILE *files[]);
 char show_menu(void);
-int spell_check(char *names[]);
+int spell_check(struct sc_config const *config);
 void trim_word(char *word, char *out);
 int is_number(char tmp[]);
 int word_exists(FILE *dict, char *word);
