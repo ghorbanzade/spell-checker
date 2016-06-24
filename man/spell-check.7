@@ -1,0 +1,43 @@
+.Dd 24 June 2016
+.Dt SPELL-CHECKER 7
+
+.Sh NAME
+.Nm spell-check
+.Nd corrects spelling of a given document interactively
+
+.Sh SYNOPSIS
+.Nm
+.Op Fl hv
+.Op Fl i Ar input_file
+.Op Fl p | o Ar output_file
+.Op Fl d Ar dictionary_file
+
+.Sh DESCRIPTION
+The
+.Nm
+utility program checks spelling of a given set of documents and allows user to interactively correct words that it identifies as misspelled.
+.PP
+.Nm
+accepts the following options:
+.Bl -tag -width indent
+.It Fl v
+Prints version of the software and exits.
+.It Fl h
+Prints usage syntax and exits.
+.It Fl p
+Makes the document to be modified in-place.
+.It Fl i Ar input_file
+Specifies the document to be checked.
+If not specified, the software will prompt user to choose a file from the list of files in the current directory.
+.It Fl o Ar output_file
+Specifies the output file to be generated.
+If not specified, the output is written into a file with same name as document under review, appended by `.out` extension.
+.It Fl d Ar dictionary_file
+Specifies the dictionary to be used for spell-checking.
+If not specified, the software will use its own dictionary file.
+
+.Sh SEE ALSO
+See the Spell-Checker source code at http://github.com/ghorbanzade/spell-checker.
+
+.Sh AUTHORS
+Pejman Ghorbanzade (mail@ghorbanzade.com).
