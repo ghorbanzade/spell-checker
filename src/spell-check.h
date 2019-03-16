@@ -28,11 +28,12 @@ struct sc_config {
     char const *file[FILE_COUNT];
 };
 
+int check_config(struct sc_config *config, int argc, char *argv[]);
+int spell_check(struct sc_config const *config);
 void close_files(FILE *files[]);
 int handle_word(char buf[], FILE *files[], struct sc_config const *config);
 int open_files(struct sc_config const *config, FILE *files[]);
 char show_menu(void);
-int spell_check(struct sc_config const *config);
 void trim_word(char *word, char *out);
 int is_number(char tmp[]);
 int word_exists(FILE *dict, char *word);
