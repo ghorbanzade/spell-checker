@@ -1,13 +1,13 @@
 #
-# Spell-Checker: interactive command-line tool to fix spelling errors
+# splchk: interactive command-line tool to find and fix spelling errors
 # Copyright 2016 Pejman Ghorbanzade <pejman@ghorbanzade.com>
 # Released under the terms of MIT License
-# https://github.com/ghorbanzade/spell-checker/blob/master/LICENSE
+# https://github.com/ghorbanzade/splchk/blob/master/LICENSE
 #
 
 cmake_minimum_required (VERSION 2.6)
 
-project (Spell-Checker)
+project (splchk)
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -pedantic -Wextra")
 
