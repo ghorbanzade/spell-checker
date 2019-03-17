@@ -233,8 +233,8 @@ void close_files(FILE *files[])
  */
 void trim_word(char *word, char *out)
 {
-    int i, j = 0;
-    for (i = 0; i < strlen(word); i++) {
+    unsigned j = 0u;
+    for (size_t i = 0; i < strlen(word); i++) {
         if (!ispunct(word[i]))
             out[j++] = tolower(word[i]);
     }
@@ -249,7 +249,7 @@ void trim_word(char *word, char *out)
 int is_number(char tmp[])
 {
     int ret = -1;
-    for (int i = 0; i < strlen(tmp); i++)
+    for (size_t i = 0; i < strlen(tmp); i++)
         if (!isdigit(tmp[i]))
             ret = 0;
     return ret;
@@ -282,7 +282,6 @@ int word_exists(FILE *dict, char *word)
  */
 char show_menu(void)
 {
-    int i;
     char input;
     char *tmp = "ascq";
     printf("(a) add to dictionary\n");
@@ -291,7 +290,7 @@ char show_menu(void)
     printf("(q) abort program\n");
     while (1) {
         input = getch();
-        for (i = 0; i < strlen(tmp); i++)
+        for (size_t i = 0; i < strlen(tmp); i++)
             if (input == tmp[i])
                 goto FOUND;
     }

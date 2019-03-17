@@ -16,7 +16,6 @@ enum log_level {
     LOG_LEVEL // to get number of enum items
 };
 
-static FILE *fp;
 static char fmt[LOG_MSG_LEN];
 static char const *levels[LOG_LEVEL];
 static int started = 0;

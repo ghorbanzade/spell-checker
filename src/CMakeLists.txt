@@ -44,5 +44,5 @@ set(THE_SOURCE_FILES
 )
 
 add_executable(${PROJECT_NAME} ${THE_SOURCE_FILES})
-target_include_directories(${PROJECT_NAME} "${PROJECT_BINARY_DIR}/cfg")
+target_include_directories(${PROJECT_NAME} PRIVATE "${PROJECT_BINARY_DIR}/cfg")
 set_target_properties(${PROJECT_NAME} PROPERTIES C_STANDARD 99)

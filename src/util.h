@@ -20,7 +20,7 @@
 
 #define KNRM  "\x1B[0m"
 #define KRED  "\x1B[31m"
-#define CLSCRN "\e[1;1H\e[2J"
+#define CLSCRN "\033[1;1H\033[2J"
 #define LINE_WIDTH 79
 
 char getch(void);

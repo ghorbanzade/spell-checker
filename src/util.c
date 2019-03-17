@@ -34,7 +34,7 @@ char getch(void)
  */
 void input_line(char *out, size_t size)
 {
-    int i = 0;
+    size_t i = 0;
     char ch;
     char tmp[size];
     while ((ch = getch()) != '\n') {
@@ -129,13 +129,13 @@ void print_hr(void)
  */
 void print_preview(FILE *file, char const word[])
 {
-    long int pre, len;
-    long int cur, end;
+    long pre, len;
+    long cur, end;
     size_t size = 300;
 
     cur = ftell(file);
-    pre = (cur < size) ? 0 : cur - size - strlen(word);
-    len = (cur < size) ? cur - strlen(word) : size;
+    pre = ((size_t) cur < size) ? 0 : cur - size - strlen(word);
+    len = ((size_t) cur < size) ? cur - strlen(word) : size;
     print_snippet(file, pre, len);
 
     printf("%s%s%s ", KRED, word, KNRM);
@@ -143,7 +143,7 @@ void print_preview(FILE *file, char const word[])
     fseek(file, 0, SEEK_END);
     end = ftell(file);
     fseek(file, cur, SEEK_SET);
-    len = (end < cur + size) ? end - cur : size;
+    len = ((size_t) end < cur + size) ? end - cur : (long) size;
     print_snippet(file, cur, len);
 
     printf("\n");
