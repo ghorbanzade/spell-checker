@@ -5,13 +5,14 @@
 # https://github.com/ghorbanzade/splchk/blob/master/LICENSE
 #
 
-cmake_minimum_required (VERSION 2.6)
+cmake_minimum_required(VERSION 3.5.1 FATAL_ERROR)
 
-project (splchk)
+project(splchk VERSION 1.1.0 LANGUAGES C)
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -pedantic -Wextra")
+set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall -pedantic -Wextra")
+set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Werror -Wfatal-errors")
 
-set(PROGRAM_NAME spell-check)
+set(PROGRAM_NAME splchk)
 set(PROJECT_VERSION 1.1)
 set(COPYRIGHT_YEAR 2016)
 set(COPYRIGHT_AUTHOR "Pejman Ghorbanzade")
@@ -36,13 +37,12 @@ configure_file(
 	"${PROJECT_BINARY_DIR}/cfg/config.h"
 )
 
-include_directories(
-	"${PROJECT_BINARY_DIR}/cfg"
-)
-
-add_executable(
-	${PROJECT_NAME}
+set(THE_SOURCE_FILES
 	logger.c
 	util.c
 	main.c
 )
+
+add_executable(${PROJECT_NAME} ${THE_SOURCE_FILES})
+target_include_directories(${PROJECT_NAME} "${PROJECT_BINARY_DIR}/cfg")
+set_target_properties(${PROJECT_NAME} PROPERTIES C_STANDARD 99)
