@@ -1,3 +1,10 @@
+/**
+ * Spell-Checker: interactive command-line tool to fix spelling errors
+ * Copyright 2016 Pejman Ghorbanzade <pejman@ghorbanzade.com>
+ * Released under the terms of MIT License
+ * https://github.com/ghorbanzade/spell-checker/blob/master/LICENSE
+ */
+
 #ifndef UTIL_H
 #define UTIL_H
 
