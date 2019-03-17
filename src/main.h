@@ -16,7 +16,7 @@
 #include "util.h"
 #include "logger.h"
 
-#define DEFAULT_DICTIONARY "dat/dictionary"
+#define DEFAULT_DICTIONARY "dat/dictionary.txt"
 #define SC_FILE_BANNER "bin/cfg/banner"
 #define SC_FILE_HELP "bin/cfg/help"
 #define SC_FILE_VERSION "bin/cfg/version"
@@ -32,7 +32,7 @@ enum {
 
 struct sc_config {
     int in_place;
-    char const *file[FILE_COUNT];
+    char *file[FILE_COUNT];
 };
 
 int check_config(struct sc_config *config, int argc, char *argv[]);

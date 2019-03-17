@@ -12,7 +12,7 @@ project (splchk)
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -pedantic -Wextra")
 
 set(PROGRAM_NAME spell-check)
-set(PROJECT_VERSION 0.1)
+set(PROJECT_VERSION 1.1)
 set(COPYRIGHT_YEAR 2016)
 set(COPYRIGHT_AUTHOR "Pejman Ghorbanzade")
 
@@ -41,8 +41,8 @@ include_directories(
 )
 
 add_executable(
-	spell-check
+	${PROJECT_NAME}
 	logger.c
 	util.c
-	spell-check.c
+	main.c
 )
