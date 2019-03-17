@@ -2,13 +2,8 @@
 
 [![Build Status][1]][2]
 
-**splchk** is a simple proof-of-concept command-line tool developed as
-a solution to a final course project for the [Programming in C][3]
-course that I taught in Spring 2016.
-
-**splchk** allows you to inspect a text file for potential spelling
-errors and to fix them interactively either in the same file or in
-a new file.
+**splchk** is an interactive command-line tool to find and fix potential
+spelling errors in a given text document.
 
 ```bash
 username@hostname:~/$ spellcheck -h
@@ -23,6 +18,9 @@ usage: splchk [-hv] [[-i] input_file] [-p | -o output_file]
   -p                    makes document to be modified in-place
   -v                    prints version and exits
 ```
+
+**splchk** was originally developed as a solution to a final course project
+for the [Programming in C][3] course that I taught in Spring 2016.
 
 ## Demo
 

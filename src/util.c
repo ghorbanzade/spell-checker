@@ -75,7 +75,7 @@ ERROR:
  */
 void print_header(char const *const doc)
 {
-    printf("%-40s%40s\n", PROJECT_NAME, doc);
+    printf("%-39s%40s\n", PROJECT_NAME, doc);
 }
 
 /**
