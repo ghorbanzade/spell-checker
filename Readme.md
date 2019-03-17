@@ -27,10 +27,10 @@ for the [Programming in C][3] course that I taught in Spring 2016.
 To illustrate the look and feel of **splchk**, let us check for potential
 spelling errors in a [sample-01.txt][4] excerpt (from [lumenlearning.com][5])
 using a small dictionary of 10,000 words and rewrite a processed version of
-the document in a new file `sample-01.out.txt`.
+the document in a new file `sample-01.txt.out`.
 
 ```bash
-splchk -d dat/dictionary.txt -i dat/sample-01.txt -o dat/sample-01.out.txt
+splchk dat/sample-01.txt
 ```
 
 The application output is shown below:
