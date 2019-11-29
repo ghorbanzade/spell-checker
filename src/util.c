@@ -73,9 +73,57 @@ ERROR:
  *
  *
  */
-void print_header(char const *const doc)
+void print_help()
 {
-    printf("%-39s%40s\n", PROJECT_NAME, doc);
+    char const * const msg =
+        "\n  usage: splchk [-hv] [[-i] input_file] [-p | -o output_file]"
+        "\n                [-d dictionary_file]"
+        "\n"
+        "\n  -d dictionary_file    file to be used as dictionary"
+        "\n  -h                    prints this message and exits"
+        "\n  -i input_file         file to check"
+        "\n  -o output_file        file to write corrected text into"
+        "\n  -p                    makes document to be modified in-place"
+        "\n  -v                    prints version and exits"
+        "\n\n";
+    printf(msg);
+}
+
+/**
+ *
+ *
+ *
+ */
+void print_banner()
+{
+    char const * const msg =
+        "\n\n"
+        "\n        splchk v1.1, Copyright (C) 2016 Pejman Ghorbanzade"
+        "\n        This software comes with ABSOLUTELY NO WARRANTY."
+        "\n        This is free software, and you are welcome to redistribute it"
+        "\n        under certain conditions; refer to `license' for details."
+        "\n\n";
+    printf(msg);
+}
+
+/**
+ *
+ *
+ *
+ */
+void print_version()
+{
+    printf("%s version %s\n", "splchk", "v1.1");
+}
+
+/**
+ *
+ *
+ *
+ */
+void print_header(char const * const doc)
+{
+    printf("%-39s%40s\n", "splchk", doc);
 }
 
 /**

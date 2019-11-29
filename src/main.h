@@ -17,9 +17,6 @@
 #include "logger.h"
 
 #define DEFAULT_DICTIONARY "dat/dictionary.txt"
-#define SC_FILE_BANNER "bin/cfg/banner"
-#define SC_FILE_HELP "bin/cfg/help"
-#define SC_FILE_VERSION "bin/cfg/version"
 
 #define MAX_WORD_LENGTH 40
 

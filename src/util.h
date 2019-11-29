@@ -15,7 +15,6 @@
 #include <string.h>
 #include <termios.h>
 
-#include "config.h"
 #include "logger.h"
 
 #define KNRM  "\x1B[0m"
@@ -27,6 +26,9 @@ char getch(void);
 void input_line(char *out, size_t size);
 int get_word(FILE *file, char *word);
 int print_content(char const *const filename);
+void print_help();
+void print_banner();
+void print_version();
 void print_header(char const *const doc);
 void print_hr(void);
 void print_preview(FILE *file, char const word[]);

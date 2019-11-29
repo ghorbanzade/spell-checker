@@ -26,7 +26,7 @@ int main(int argc, char *argv[])
             config.file[FILE_DIC] = optarg;
             break;
         case 'h':
-            print_content(SC_FILE_HELP);
+            print_help();
             return EXIT_SUCCESS;
         case 'i':
             config.file[FILE_DOC] = optarg;
@@ -48,22 +48,22 @@ int main(int argc, char *argv[])
             config.in_place = 1;
             break;
         case 'v':
-            print_content(SC_FILE_VERSION);
+            print_version();
             return EXIT_SUCCESS;
         default:
-            print_content(SC_FILE_HELP);
+            print_help();
             return EXIT_FAILURE;
         }
     }
 
     if (check_config(&config, argc, argv)) {
-        print_content(SC_FILE_HELP);
+        print_help();
         goto ERROR;
     }
 
     if (spell_check(&config))
         goto ERROR;
-    print_content(SC_FILE_BANNER);
+    print_banner();
     ret = EXIT_SUCCESS;
 
  ERROR:

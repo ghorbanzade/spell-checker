@@ -12,31 +12,6 @@ project(splchk VERSION 1.1.0 LANGUAGES C)
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall -pedantic -Wextra")
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Werror -Wfatal-errors")
 
-set(PROGRAM_NAME splchk)
-set(PROJECT_VERSION 1.1)
-set(COPYRIGHT_YEAR 2016)
-set(COPYRIGHT_AUTHOR "Pejman Ghorbanzade")
-
-configure_file(
-	"${PROJECT_SOURCE_DIR}/cfg/banner.in"
-	"${PROJECT_BINARY_DIR}/cfg/banner"
-)
-
-configure_file(
-	"${PROJECT_SOURCE_DIR}/cfg/help.in"
-	"${PROJECT_BINARY_DIR}/cfg/help"
-)
-
-configure_file(
-	"${PROJECT_SOURCE_DIR}/cfg/version.in"
-	"${PROJECT_BINARY_DIR}/cfg/version"
-)
-
-configure_file(
-	"${PROJECT_SOURCE_DIR}/cfg/config.h.in"
-	"${PROJECT_BINARY_DIR}/cfg/config.h"
-)
-
 set(THE_SOURCE_FILES
 	logger.c
 	util.c
